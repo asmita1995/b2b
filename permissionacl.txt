@@ -1,0 +1,100 @@
+/**
+ * Sample access control list.
+ */
+
+
+rule EveryRetailerCanReadEverything {
+    description: "Allow all participants read access to all resources"
+    participant: "com.syntel.demo.retail.Retailer"
+    operation: CREATE,READ
+    resource: "com.syntel.demo.retail.Order"
+    action: ALLOW
+}
+
+rule EveryRetailerCanReadEverything {
+    description: "Allow all participants read access to all resources"
+    participant: "com.syntel.demo.retail.Retailer"
+    operation: CREATE,READ
+    resource: "com.syntel.demo.retail.OrderShipment"
+    action: ALLOW
+}
+
+
+rule EveryLogisticProviderCanUpdateEverything {
+    description: "Allow all participants read access to all resources"
+    participant: "com.syntel.demo.retail.LogisticProvider"
+    operation: READ,UPDATE
+    resource: "com.syntel.demo.retail.OrderShipment"
+    action: ALLOW
+}
+
+
+
+
+rule EveryLogisticProviderCanReadEverything {
+    description: "Allow all participants read access to all resources"
+    participant: "com.syntel.demo.retail.LogisticProvider"
+    operation: READ
+    resource: "com.syntel.demo.retail.Order"
+    action: ALLOW
+}
+
+
+
+
+
+
+
+
+
+
+/*
+rule EveryLogisticProviderCanReadEverything {
+    description: "Allow all participants read access to all resources"
+    participant: "com.syntel.demo.retail.LogisticProvider"
+    operation: CREATE,READ,UPDATE
+    resource: "com.syntel.demo.retail.*"
+    action: ALLOW
+}
+*/
+
+
+rule EverybodyCanSubmitTransactions {
+    description: "Allow all participants to submit transactions"
+    participant: "com.syntel.demo.retail.Retailer"
+    operation: CREATE
+    resource: "com.syntel.demo.retail.PlaceOrder"
+    action: ALLOW
+}
+rule LPCanSubmitUpdateShipmentTrackingTransaction {
+    description: "Allow logistic provider participants to submit update shipment tracking transactions"
+    participant(m): "com.syntel.demo.retail.LogisticProvider"
+    operation: CREATE
+    resource(v): "com.syntel.demo.retail.UpdateShipmentTracking"
+	condition: (v.order.orderStatus != 'RE')
+    action: ALLOW
+}
+
+rule SystemACL {
+  description:  "System ACL to permit all access"
+  participant: "org.hyperledger.composer.system.Participant"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.**"
+  action: ALLOW
+}
+
+rule NetworkAdminUser {
+    description: "Grant business network administrators full access to user resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "**"
+    action: ALLOW
+}
+
+rule NetworkAdminSystem {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}
